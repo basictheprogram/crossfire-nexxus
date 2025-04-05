@@ -44,9 +44,7 @@ class Logger(logging.Logger):
 
             from tools.logger import GoogleCloudFormatter
 
-            client = google.cloud.logging.Client(
-                project=project, credentials=credentials
-            )
+            client = google.cloud.logging.Client(project=project, credentials=credentials)
             client.setup_logging()
 
             formatter = GoogleCloudFormatter()

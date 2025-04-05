@@ -1,0 +1,16 @@
+{% block content %}
+{% if server_data %}
+    {% for server in server_data %}
+        START_SERVER_DATA
+        {% for key, value in server.items %}
+            {% if value %}
+                {{ key }}={{ value }}
+            {% endif %}
+        {% endfor %}
+        END_SERVER_DATA
+    {% endfor %}
+{% else %}
+    <!-- If no data is available -->
+    <p>No servers available.</p>
+{% endif %}
+{% endblock %}

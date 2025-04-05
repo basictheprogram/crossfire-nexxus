@@ -26,7 +26,8 @@
                 "yzhang.markdown-all-in-one",
                 "humao.rest-client",
                 "ms-python.debugpy",
-                "ms-playwright.playwright"
+                "ms-playwright.playwright",
+                "GitHub.copilot"
             ]
         }
     },

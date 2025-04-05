@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Server List</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    {% if server_list %}
+        <table>
+            <tr>
+                <th>Hostname</th>
+                <th>Comment</th>
+                <th>Arch/Map/Code Base</th>
+                <th>Flags</th>
+                <th># Players</th>
+                <th>In/Out Bytes</th>
+                <th>Uptime (min)</th>
+                <th>Version</th>
+                <th>CS/SC Version</th>
+                <th>Last Update</th>
+            </tr>
+            {% for server in server_list %}
+                <tr>
+                    <td>{{ server.hostname }}{% if server.port %}:{{ server.port }}{% endif %}</td>
+                    <td>{{ server.html_comment|default:"&nbsp;" }}</td>
+                    <td>{{ server.archbase|default:"&nbsp;" }}/{{ server.mapbase|default:"&nbsp;" }}/{{ server.codebase|default:"&nbsp;" }}</td>
+                    <td>{{ server.flags|default:"&nbsp;" }}</td>
+                    <td>{{ server.num_players|default:"&nbsp;" }}</td>
+                    <td>{{ server.in_bytes|default:"&nbsp;" }} / {{ server.out_bytes|default:"&nbsp;" }}</td>
+                    <td>{% if server.uptime %}{{ server.uptime|divisibleby:60 }}{% else %}&nbsp;{% endif %}</td>
+                    <td>{{ server.version|default:"&nbsp;" }}</td>
+                    <td>{{ server.cs_version|default:"&nbsp;" }} / {{ server.sc_version|default:"&nbsp;" }}</td>
+                    <td>{{ server.last_update|date:"Y-m-d H:i:s" }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No servers listed on metaserver.</p>
+    {% endif %}
+</body>
+</html>

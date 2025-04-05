@@ -11,4 +11,3 @@ Learn more about using this repository:
 - [Understanding pre-commit Configure](pre-commit.md)
 - [Understanding Pyright Configure](pyright.md)
 - [Understanding Test Configure](test.md)
-

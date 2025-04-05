@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Netrek Server List View{% endblock %}
+{% block content %}
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Hostname:Port</th>
+                <th>Comment</th>
+                <th>Arch/Map/Code Base</th>
+                <th>Flags</th>
+                <th># Players</th>
+                <th>In/Out Bytes</th>
+                <th>Uptime (min)</th>
+                <th>Version</th>
+                <th>CS/SC Version</th>
+                <th>Last Update</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for server in server_list %}
+                <tr>
+                    <td>{{ server.hostname }}:{{ server.port }}</td>
+                    <td>{{ server.html_comment|safe }}</td>
+                    <td>{{ server.archbase }}/{{ server.mapbase }}/{{ server.codebase }}</td>
+                    <td>{{ server.flags }}</td>
+                    <td>{{ server.num_players }}</td>
+                    <td>{{ server.in_bytes }} / {{ server.out_bytes }}</td>
+                    <td>{{ server.uptime }}</td>
+                    <td>{{ server.version }}</td>
+                    <td>{{ server.sc_version }} / {{ server.cs_version }}</td>
+                    <td>{{ server.last_update }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="10" class="text-center">No Netrek Servers found!</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

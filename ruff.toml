@@ -39,6 +39,8 @@ target-version = "py311"
 # Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`)  codes by default.
 select = ["ALL"]
 ignore = [
+    "ANN002",
+    "ARG002",
     "COM812",
     "COM819",
     "D100",
@@ -48,6 +50,7 @@ ignore = [
     "E111",
     "E114",
     "E117",
+    "ERA001",
     "ISC001",
     "ISC002",
     "Q000",
@@ -79,4 +82,5 @@ line-ending = "auto"
 
 [lint.per-file-ignores]
 # Ignore all directories named `tests`.
-"tests/**" = ["INP001", "S101"]
+"**/tests/**" = ["INP001", "S101", "PLR2004", "D106"]
+"**/migrations/**" = ["RUF012", "D101", "D101"]
