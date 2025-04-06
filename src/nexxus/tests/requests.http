@@ -1,3 +1,129 @@
+### Test GET request
+GET http://127.0.0.1:8001/meta_update.php HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer <your-token>
+
+### Test POST request
+POST http://127.0.0.1:8000/meta_update.php HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+hostname=localhost&port=80&html_comment=This+is+an+HTML+comment&text_comment=This+is+a+text+comment&archbase=Archetypes+base+description&mapbase=Maps+base+description&codebase=Server+code+base+description&flags=abc&num_players=100&in_bytes=1024&out_bytes=2048&uptime=3600&version=1.0.0&sc_version=2.0.0&cs_version=2.0.0
+
+
+### Test POST request
+POST http://127.0.0.1:8000/meta_update.php HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+hostname=localhost&port=80&html_comment=This+is+an+HTML+comment&text_comment=This+is+a+text+comment&archbase=Archetypes+base+description&mapbase=Maps+base+description&codebase=Server+code+base+description&flags=abc&num_players=100&in_bytes=1024&out_bytes=2048&uptime=3600&version=1.0.0&sc_version=2.0.0&cs_version=2.0.0
+
+
+### Test https POST to metaserver.cross-fire.org
+POST http://127.0.0.1:8000/meta_update.php  HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+hostname=c-98-61-28-198.hsd1.mn.comcast.net
+&port=80
+&html_comment=This+is+a+HTML+comment
+&text_comment=This+is+a+text+comment
+&archbase=restro
+&mapbase=Standard
+&codebase=Standard
+&flags=abc
+&num_players=100
+&in_bytes=1024
+&out_bytes=2048
+&uptime=3600
+&version=1.0.0
+&sc_version=2.0.0
+&cs_version=2.0.0
+
+### Test http POST to metaserver.cross-fire.org
+POST http://127.0.0.1:8000/meta_update.php HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+hostname=c-98-61-28-198.hsd1.mn.comcast.net
+&port=80
+&html_comment=HTML+comment+x-www-form-urlencoded
+&text_comment=text+comment+x-www-form-urlencoded
+&archbase=restro
+&mapbase=Standard
+&codebase=Standard
+&flags=zzz
+&num_players=10
+&in_bytes=1024
+&out_bytes=2048
+&uptime=3600
+&version=1.0.0
+&sc_version=2.0.0
+&cs_version=2.0.0
+
+### Test http POST multipart/form-data
+POST http://127.0.0.1:8000/meta_update.php HTTP/1.1
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="hostname"
+
+c-98-61-28-198.hsd1.mn.comcast.net
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="port"
+
+80
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="html_comment"
+
+HTML comment http multipart/form-data
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="text_comment"
+
+text comment http multipart/form-data
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="archbase"
+
+restro
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="mapbase"
+
+Standard
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="codebase"
+
+Standard
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="flags"
+
+zzz
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="num_players"
+
+10
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="in_bytes"
+
+1024
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="out_bytes"
+
+2048
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="uptime"
+
+3600
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="version"
+
+1.0.0
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="sc_version"
+
+2.0.0
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="cs_version"
+
+2.0.0
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+
 ### Test POST request
 POST http://localhost:8000/meta_update.php
 Content-Type: application/json

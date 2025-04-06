@@ -28,11 +28,11 @@ exclude = [
     "venv",
 ]
 
-# Same as Black.
+
 line-length = 120
 indent-width = 4
 
-# Assume Python 3.13
+# Assume Python 3.11
 target-version = "py311"
 
 [lint]
@@ -62,7 +62,7 @@ ignore = [
 
 # Allow fix for all enabled rules (when `--fix`) is provided.
 fixable = ["ALL"]
-unfixable = []
+unfixable = ["F401"]
 
 # Allow unused variables when underscore-prefixed.
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
@@ -82,5 +82,5 @@ line-ending = "auto"
 
 [lint.per-file-ignores]
 # Ignore all directories named `tests`.
-"**/tests/**" = ["INP001", "S101", "PLR2004", "D106"]
+"**/tests/**" = ["ARG005", "INP001", "S101", "PLR2004", "D106", "D104"]
 "**/migrations/**" = ["RUF012", "D101", "D101"]

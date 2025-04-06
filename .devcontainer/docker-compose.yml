@@ -17,7 +17,7 @@ services:
       - nexxus
 
   mysql:
-    container_name: nexxus-mysql
+    container_name: nexxus-ninja-mysql
     image: mysql:latest
     labels:
       - "traefik.enable=false"

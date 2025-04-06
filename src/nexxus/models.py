@@ -4,40 +4,46 @@ from django.db import models
 class Blacklist(models.Model):
     """Represents a list of blacklisted hostnames."""
 
-    entry: int = models.AutoField(primary_key=True)
-    hostname: str | None = models.CharField(max_length=80, blank=True, null=True)
+    entry = models.AutoField(primary_key=True)
+    hostname = models.CharField(max_length=80, blank=True)
     ip_address = models.GenericIPAddressField(blank=True, null=True)
 
     class Meta:
+        """Meta options for the Blacklist model."""
+
         db_table = "blacklist"
 
     def __str__(self) -> str:
+        """Return the string representation of the Blacklist entry."""
         return self.hostname or "(Unnamed)"
 
 
 class Server(models.Model):
     """Represents a server with various metadata and statistics."""
 
-    entry: int = models.AutoField(primary_key=True)
-    hostname: str | None = models.CharField(max_length=80, blank=True, null=True)
-    port: int | None = models.IntegerField(blank=True, null=True)
-    html_comment: str | None = models.CharField(max_length=1024, blank=True, null=True)
-    text_comment: str | None = models.CharField(max_length=256, blank=True, null=True)
-    archbase: str | None = models.CharField(max_length=64, blank=True, null=True)
-    mapbase: str | None = models.CharField(max_length=64, blank=True, null=True)
-    codebase: str | None = models.CharField(max_length=64, blank=True, null=True)
-    flags: str | None = models.CharField(max_length=20, blank=True, null=True)
-    num_players: int | None = models.IntegerField(blank=True, null=True)
-    in_bytes: int | None = models.IntegerField(blank=True, null=True)
-    out_bytes: int | None = models.IntegerField(blank=True, null=True)
-    uptime: int | None = models.IntegerField(blank=True, null=True)
-    version: str | None = models.CharField(max_length=64, blank=True, null=True)
-    sc_version: str | None = models.CharField(max_length=20, blank=True, null=True)
-    cs_version: str | None = models.CharField(max_length=20, blank=True, null=True)
+    entry = models.AutoField(primary_key=True)
+    hostname = models.CharField(max_length=80, blank=True)
+    port = models.PositiveIntegerField(blank=True, null=True)
+    html_comment = models.CharField(max_length=1024, blank=True)
+    text_comment = models.CharField(max_length=256, blank=True)
+    archbase = models.CharField(max_length=64, blank=True)
+    mapbase = models.CharField(max_length=64, blank=True)
+    codebase = models.CharField(max_length=64, blank=True)
+    flags = models.CharField(max_length=20, blank=True)
+    num_players = models.IntegerField(blank=True, null=True)
+    in_bytes = models.IntegerField(blank=True, null=True)
+    out_bytes = models.IntegerField(blank=True, null=True)
+    uptime = models.IntegerField(blank=True, null=True)
+    version = models.CharField(max_length=64, blank=True)
+    sc_version = models.CharField(max_length=20, blank=True)
+    cs_version = models.CharField(max_length=20, blank=True)
     last_update: models.DateTimeField = models.DateTimeField(auto_now=True)
 
     class Meta:
+        """Meta options for the Server model."""
+
         db_table = "servers"
 
     def __str__(self) -> str:
+        """Return the string representation of the Server entry."""
         return f"{self.hostname}:{self.port}" if self.hostname and self.port else "(Unnamed Server)"
