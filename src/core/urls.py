@@ -12,5 +12,4 @@ urlpatterns = [
     path("meta_update.php", LegacyUpdateView.as_view(), name="legacy_update"),
     # v3 metaserver
     path("v3/", include(("nexxus.urls", "nexxus"), namespace="v3")),
-    # path("", app.urls),
 ]

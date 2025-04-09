@@ -4,12 +4,18 @@ from nexxus.models import Server
 
 
 class ServerSchema(ModelSchema):
+    """Schema for the Server model."""
+
     class Meta:
+        """Meta options for the ServerSchema."""
+
         model = Server
         fields = "__all__"
 
 
 class ServerCreateSchema(Schema):
+    """Schema for creating a new server entry."""
+
     hostname: str
     port: int
     html_comment: str
@@ -27,5 +33,7 @@ class ServerCreateSchema(Schema):
     cs_version: str
 
 
-class Error(Schema):
+class ErrorSchema(Schema):
+    """Schema for error responses."""
+
     message: str
