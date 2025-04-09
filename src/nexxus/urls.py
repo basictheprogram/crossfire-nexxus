@@ -1,5 +1,9 @@
+from django.urls import path
+
+from nexxus.views import ServerListlView
+
 app_name = "nexxus"
 
 urlpatterns = [
-    # path("", IndexView.as_view(template_name="MCM/index.html"), name="index"),
+    path("", ServerListlView.as_view(), name="index"),
 ]

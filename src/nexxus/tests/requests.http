@@ -37,26 +37,6 @@ hostname=c-98-61-28-198.hsd1.mn.comcast.net
 &sc_version=2.0.0
 &cs_version=2.0.0
 
-### Test http POST to metaserver.cross-fire.org
-POST http://127.0.0.1:8000/meta_update.php HTTP/1.1
-Content-Type: application/x-www-form-urlencoded
-
-hostname=c-98-61-28-198.hsd1.mn.comcast.net
-&port=80
-&html_comment=HTML+comment+x-www-form-urlencoded
-&text_comment=text+comment+x-www-form-urlencoded
-&archbase=restro
-&mapbase=Standard
-&codebase=Standard
-&flags=zzz
-&num_players=10
-&in_bytes=1024
-&out_bytes=2048
-&uptime=3600
-&version=1.0.0
-&sc_version=2.0.0
-&cs_version=2.0.0
-
 ### Test http POST multipart/form-data
 POST http://127.0.0.1:8000/meta_update.php HTTP/1.1
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
@@ -166,6 +146,26 @@ hostname=localhost
 &codebase=Standard
 &flags=abc
 &num_players=100
+&in_bytes=1024
+&out_bytes=2048
+&uptime=3600
+&version=1.0.0
+&sc_version=2.0.0
+&cs_version=2.0.0
+
+### Test http POST to metaserver.cross-fire.org
+POST http://127.0.0.1:8000/v3/ HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+hostname=c-98-61-28-198.hsd1.mn.comcast.net
+&port=80
+&html_comment=HTML+comment+x-www-form-urlencoded
+&text_comment=text+comment+x-www-form-urlencoded
+&archbase=restro
+&mapbase=Standard
+&codebase=Standard
+&flags=zzz
+&num_players=10
 &in_bytes=1024
 &out_bytes=2048
 &uptime=3600

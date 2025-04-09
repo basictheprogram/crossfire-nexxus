@@ -133,6 +133,7 @@ profile_default/
 sdist/
 share/python-wheels/
 src/core/settings/local.py
+staticfiles/
 target/
 testing*.db
 var/

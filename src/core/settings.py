@@ -110,7 +110,7 @@ USE_TZ = True
 
 # STATICFILES_STORAGE = "core.settings.storage_backends.StaticStorage"
 # STATICFILES_DIRS = [BASE_DIR / "nexxus" / "static"]
-STATIC_ROOT = BASE_DIR / "static"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 STATIC_URL = "/static/"
 STORAGES = {
     # ...

@@ -11,6 +11,7 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, TemplateView
 
+from nexxus.forms import ServerForm
 from nexxus.models import Server
 from nexxus.security import (
     APIKeyCheck,
@@ -51,7 +52,7 @@ class LegacyClientView(TemplateView):
         last_update_timeout = timezone.now() - timedelta(seconds=settings.LAST_UPDATE_TIMEOUT)
 
         # Query the Server model with the necessary filters and field selection
-        queryset: QuerySet[Server] = (
+        queryset = (
             Server.objects.filter(last_update__gt=last_update_timeout)
             .values(
                 "hostname",
@@ -152,5 +153,51 @@ class LegacyUpdateView(View):
         return HttpResponse(
             "Server created" if created else "Server updated",
             status=201 if created else 200,
+            content_type="text/plain",
+        )
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class ServerListlView(ListView):
+    """A view that displays a list of Server objects, ordered by hostname."""
+
+    model = Server
+    template_name: str = "server_list.html"
+    context_object_name = "server_list"
+
+    def get_queryset(self) -> QuerySet[Server]:
+        """Return all Server objects ordered by hostname."""
+        queryset: QuerySet[Server] = Server.objects.order_by("hostname")
+        return queryset
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        """Handle GET requests."""
+        return super().get(request)
+
+    def post(self, request: HttpRequest) -> HttpResponse:
+        """Handle POST requests."""
+        form = ServerForm(request.POST)
+
+        if form.is_valid():
+            cleaned_data = form.cleaned_data
+            hostname = cleaned_data.get("hostname")
+            port = cleaned_data.get("port")
+
+            server, created = Server.objects.update_or_create(
+                hostname=hostname,
+                port=port,
+                defaults=cleaned_data,
+            )
+
+            return HttpResponse(
+                "Server created" if created else "Server updated",
+                status=201 if created else 200,
+                content_type="text/plain",
+            )
+
+        errors = form.errors.as_text()
+        return HttpResponse(
+            f"Invalid data: {errors}",
+            status=400,
             content_type="text/plain",
         )

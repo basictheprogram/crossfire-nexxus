@@ -35,9 +35,11 @@
         "DISPLAY": "dummy",
         "PYTHONUNBUFFERED": "True",
         "UV_LINK_MODE": "copy",
-        "UV_PROJECT_ENVIRONMENT": "/home/vscode/.venv"
+        "UV_PROJECT_ENVIRONMENT": "/workspace/.venv"
     },
-    "postCreateCommand": "./.devcontainer/postCreateCommand.sh",
-    "postStartCommand": "uv run pre-commit install",
-    "remoteUser": "vscode"
+    "postCreateCommand": "./.devcontainer/postCreateCommand.sh && uv run pre-commit install",
+    "remoteUser": "vscode",
+    "forwardPorts": [
+        8000
+    ]
 }
