@@ -18,7 +18,7 @@ class TestNexxusController:
     client = Client()
 
     @pytest.fixture(autouse=True)
-    def setup_method(self, db: pytest.django.db) -> None:
+    def setup_method(self) -> None:
         """Run before every test."""
         self.client = Client()
         self.list_url = "/v3/api/servers"
