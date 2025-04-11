@@ -14,10 +14,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Install Hadolint
+        run: |
+          wget -O /usr/local/bin/hadolint https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-x86_64
+          chmod +x /usr/local/bin/hadolint
+
       - name: Lint Dockerfile
-        uses: hadolint/hadolint-action@v3.1.0
-        with:
-          dockerfile: Dockerfile
+        run: |
+          find . -type f -iname 'Dockerfile*' | while read dockerfile; do
+            echo "Linting $dockerfile"
+            hadolint "$dockerfile"
+          done
 
   lint-devcontainer:
     runs-on: ubuntu-latest
