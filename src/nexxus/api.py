@@ -2,13 +2,19 @@ from typing import Any
 
 from django.db.models import QuerySet
 from django.http import HttpRequest
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from ninja_extra import NinjaExtraAPI, api_controller, route
 
 from nexxus.models import Server
 from nexxus.schemas import ServerCreateSchema, ServerSchema
 
 api = NinjaExtraAPI()
+
+
+@api.get("")
+def index(request: HttpRequest):  # noqa: ARG001,ANN201
+    """Redirect to the Server List view."""
+    return redirect("/v3/api/servers")
 
 
 @api_controller("/servers", permissions=[])

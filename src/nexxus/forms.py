@@ -20,7 +20,13 @@ class ServerForm(forms.ModelForm):
 
     def clean_hostname(self) -> str:
         """Validate and clean the hostname field."""
-        hostname = self.cleaned_data.get("hostname", "").strip().lower()
+        hostname = self.cleaned_data.get("hostname", "")
+
+        if not hostname:
+            error_msg = "Invalid hostname."
+            raise forms.ValidationError(error_msg)
+
+        hostname = hostname.strip().lower()
 
         if not re.match(r"^[a-z0-9.-]+$", hostname):
             error_msg = "Invalid hostname format."

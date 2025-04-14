@@ -33,9 +33,9 @@ classifiers = [
     "Framework :: Django",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.13",
     "Framework :: Django",
-    "Framework :: Django :: 5.1",
+    "Framework :: Django :: 5.2",
 ]
 
 dependencies = [
@@ -47,6 +47,7 @@ dependencies = [
     "environs",
     "mysqlclient",
     "whitenoise[brotli]",
+    "gunicorn",
 ]
 
 [tool.uv]
@@ -67,6 +68,8 @@ dev-dependencies = [
     "factory-boy",
     "django-coverage-plugin",
     "debugpy",
+    "mysqlclient",
+    "tiktoken>=0.9.0",
 ]
 
 [tool.hatch.build.targets.wheel]

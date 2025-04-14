@@ -14,11 +14,11 @@ from django.views.generic import ListView, TemplateView
 from nexxus.forms import ServerForm
 from nexxus.models import Server
 from nexxus.security import (
-    APIKeyCheck,
-    HMACSignatureCheck,
+    # APIKeyCheck,
+    # HMACSignatureCheck,
     HostnameBlacklistCheck,
     IPBlacklistCheck,
-    RateLimitCheck,
+    # RateLimitCheck,
 )
 
 
@@ -107,17 +107,17 @@ class LegacyUpdateView(View):
     security_checks: ClassVar[list] = [
         IPBlacklistCheck(),
         HostnameBlacklistCheck(),
-        APIKeyCheck(),
-        HMACSignatureCheck(),
-        RateLimitCheck(),
+        # APIKeyCheck(),
+        # HMACSignatureCheck(),
+        # RateLimitCheck(),
     ]
 
     def post(self, request: HttpRequest, *args, **kwargs: PostRequestData) -> HttpResponse:
         """Handle the POST request to update or create a server."""
-        # for check in self.security_checks:
-        #     response = check.validate(request)
-        #     if response:
-        #         return response
+        for check in self.security_checks:
+            response = check.validate(request)
+            if response:
+                return response
 
         hostname = request.POST.get("hostname", "").strip()
         port = request.POST.get("port", "").strip()
