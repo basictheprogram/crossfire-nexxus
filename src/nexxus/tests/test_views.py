@@ -85,7 +85,7 @@ class TestLegacyUpdateView:
 
         assert response.status_code == HTTPStatus.CREATED
         assert Server.objects.filter(hostname="newhost", port=1234).exists()
-        assert b"Server created" in response.content
+        assert b"Nexxus created" in response.content
 
     def test_post_updates_existing_server(self) -> None:
         """Test that a valid POST request updates an existing server."""
@@ -106,7 +106,7 @@ class TestLegacyUpdateView:
         assert response.status_code == HTTPStatus.OK
         server.refresh_from_db()
         assert server.num_players == 99
-        assert b"Server updated" in response.content
+        assert b"Nexxus updated" in response.content
 
 
 class TestServerListView:
@@ -139,7 +139,7 @@ class TestServerListView:
 
         assert response.status_code == HTTPStatus.CREATED
         assert Server.objects.filter(hostname="posthost", port=8000).exists()
-        assert b"Server created" in response.content
+        assert b"Nexxus created" in response.content
 
     def test_post_invalid_form_returns_400(self) -> None:
         """Test invalid POST data returns 400 with form error details."""
