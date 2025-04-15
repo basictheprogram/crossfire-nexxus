@@ -111,7 +111,7 @@ services:
       - traefik
     environment:
       # Django v5.2
-      - DEBUG=False
+      - DEBUG=True
       - SECRET_KEY=${DJANGO_SECRET_KEY}
       - ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
       # MySQL v8.4

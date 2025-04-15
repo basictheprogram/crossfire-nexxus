@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import tiktoken
 
 # Load your tokenizer - use "cl100k_base" for GPT-4 models or check the specific model tokenizer
@@ -10,7 +12,7 @@ MAX_TOKENS = 4000
 def split_text_to_token_chunks(filename: str):
     """Read a file, tokenize its contents, and split it into chunks."""
     # Step 1: Read the entire text from the file
-    with open(filename, "r") as file:
+    with open(filename) as file:
         text = file.read()
 
     # Step 2: Tokenize the entire text
@@ -69,7 +71,7 @@ def split_text_to_token_chunks(filename: str):
     # Save the final chunk
     if chunk_tokens:
         output_filename = f"chunk_{len(chunk_text) + 1}.txt"
-        with open(output_filename, "w") as chunk_file:
+        with Path.open(output_filename, "w") as chunk_file:
             chunk_file.writelines(chunk_text)
         print(f"Saved {output_filename}")
 

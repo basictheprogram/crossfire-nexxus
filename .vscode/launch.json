@@ -2,15 +2,19 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Debug Django2",
+            "name": "Debug Nexxus",
             "type": "debugpy",
             "request": "launch",
-            "program": "${file}",
+            "program": "${workspaceFolder}/src/manage.py",
+            "args": [
+                "runserver",
+                "0.0.0.0:8000"
+            ],
             "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/src",
             "env": {
-                "PYTHONPATH": "${workspaceFolder}/.venv"
-            },
-            "cwd": "${workspaceFolder}/src"
+                "PYTHONPATH": "${workspaceFolder}/src"
+            }
         }
     ]
 }

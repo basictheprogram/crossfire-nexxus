@@ -16,7 +16,23 @@ class ServerForm(forms.ModelForm):
         """Meta class for ServerForm."""
 
         model = Server
-        fields: ClassVar[list[str]] = ["hostname", "port"]
+        fields: ClassVar[list[str]] = [
+            "hostname",
+            "port",
+            "html_comment",
+            "text_comment",
+            "archbase",
+            "mapbase",
+            "codebase",
+            "flags",
+            "num_players",
+            "in_bytes",
+            "out_bytes",
+            "uptime",
+            "version",
+            "sc_version",
+            "cs_version",
+        ]
 
     def clean_hostname(self) -> str:
         """Validate and clean the hostname field."""

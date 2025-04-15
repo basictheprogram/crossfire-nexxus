@@ -151,7 +151,7 @@ class LegacyUpdateView(View):
         )
 
         return HttpResponse(
-            "Server created" if created else "Server updated",
+            f"Nexxus created {hostname}" if created else f"Nexxus updated {hostname}",
             status=201 if created else 200,
             content_type="text/plain",
         )
@@ -190,7 +190,7 @@ class ServerListlView(ListView):
             )
 
             return HttpResponse(
-                "Server created" if created else "Server updated",
+                f"Nexxus created {hostname}" if created else f"Nexxus updated {hostname}",
                 status=201 if created else 200,
                 content_type="text/plain",
             )

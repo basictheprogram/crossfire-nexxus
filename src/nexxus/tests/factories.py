@@ -38,3 +38,8 @@ class ServerFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = Server
+
+    @classmethod
+    def as_dict(cls, **kwargs):
+        """Return a dictionary of all fields for use in tests."""
+        return factory.build(dict, FACTORY_CLASS=cls, **kwargs)

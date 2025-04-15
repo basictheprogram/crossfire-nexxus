@@ -3,6 +3,7 @@ from faker import Faker
 
 from nexxus.forms import ServerForm
 from nexxus.models import Server
+from nexxus.tests.factories import ServerFactory
 
 fake = Faker()
 
@@ -19,6 +20,31 @@ class TestServerForm:
         assert isinstance(instance, Server)
         assert instance.hostname == "example-server.local"
         assert instance.port == 8080
+
+    def test_valid_form_optional_fields(self) -> None:
+        """Ensure the form accepts valid data."""
+        server_data = ServerFactory.as_dict()
+        form = ServerForm(data=server_data)
+
+        assert form.is_valid()
+        instance = form.save()
+        assert isinstance(instance, Server)
+        assert instance.hostname == server_data["hostname"]
+        assert instance.port == server_data["port"]
+        assert instance.html_comment == server_data["html_comment"]
+        assert instance.text_comment == server_data["text_comment"]
+        assert instance.archbase == server_data["archbase"]
+        assert instance.mapbase == server_data["mapbase"]
+        assert instance.codebase == server_data["codebase"]
+        assert instance.flags == server_data["flags"]
+        assert instance.num_players == server_data["num_players"]
+        assert instance.in_bytes == server_data["in_bytes"]
+        assert instance.out_bytes == server_data["out_bytes"]
+        assert instance.uptime == server_data["uptime"]
+        assert instance.version == server_data["version"]
+        assert instance.sc_version == server_data["sc_version"]
+        assert instance.cs_version == server_data["cs_version"]
+        assert "invalid_field" not in form.cleaned_data
 
     def test_hostname_whitespace_and_case(self) -> None:
         """Test that leading/trailing whitespace and case are cleaned."""

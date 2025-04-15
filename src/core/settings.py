@@ -151,3 +151,9 @@ LAST_UPDATE_TIMEOUT: int = env.int("LAST_UPDATE_TIMEOUT", default=3600)
 
 # The maximum number of requests per minute for the legacy client.
 LEGACY_REQUESTS_PER_MINUTE: int = env.int("LEGACY_REQUESTS_PER_MINUTE", default=5)
+
+# Required when you're behind traefik using HTTPS
+CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
