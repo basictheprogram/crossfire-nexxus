@@ -123,7 +123,7 @@ class LegacyUpdateView(View):
         port = request.POST.get("port", "").strip()
 
         if not hostname or not port:
-            return HttpResponse("Missing required fields", status=400, content_type="text/plain")
+            return HttpResponse("Missing required fields hostname and/or port", status=400, content_type="text/plain")
 
         # Convert port safely
         port = int(port) if port.isdigit() else None
