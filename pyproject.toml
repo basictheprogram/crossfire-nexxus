@@ -39,7 +39,7 @@ classifiers = [
 ]
 
 dependencies = [
-    "Django>=5.1,<6.0",
+    "Django>=5.1,<7.0",
     "django-ninja",
     "django-ninja-extra",
     "django-extensions",
