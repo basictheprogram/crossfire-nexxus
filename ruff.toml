@@ -26,45 +26,45 @@ exclude = [
     "node_modules",
     "site-packages",
     "venv",
+    "**/migrations/**",
 ]
 
-
+# Same as Black.
 line-length = 120
 indent-width = 4
-
-# Assume Python 3.11
-target-version = "py311"
+target-version = "py313"
 
 [lint]
 # Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`)  codes by default.
 select = ["ALL"]
 ignore = [
-    "ANN002",
-    "ARG002",
+    "ANN001",
     "COM812",
     "COM819",
     "D100",
+    "D101",
+    "D102",
+    "D103",
     "D203",
     "D213",
     "D300",
     "E111",
     "E114",
     "E117",
-    "ERA001",
+    "F841",
     "ISC001",
     "ISC002",
+    "PLC0415",
     "Q000",
     "Q001",
     "Q002",
     "Q003",
     "W191",
-    "RET504",
-    "DJ001",
 ]
 
 # Allow fix for all enabled rules (when `--fix`) is provided.
 fixable = ["ALL"]
-unfixable = ["F401"]
+unfixable = []
 
 # Allow unused variables when underscore-prefixed.
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
@@ -83,6 +83,4 @@ skip-magic-trailing-comma = false
 line-ending = "auto"
 
 [lint.per-file-ignores]
-# Ignore all directories named `tests`.
-"**/tests/**" = ["ARG005", "INP001", "S101", "PLR2004", "D106", "D104"]
-"**/migrations/**" = ["RUF012", "D101", "D101"]
+"**/tests/**" = ["INP001", "S101", "T201", "BLE001"]

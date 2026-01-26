@@ -19,9 +19,10 @@ authors = [{ name = "Bob Tanner", email = "tanner@real-time.com" }]
 maintainers = [
     { name = "Bob Tanner", email = "tanner@real-time.com" },
     { name = "Rick Tanner", email = "leaf@real-time.com" },
+    { name = "Leif Tanner", email = "leif@real-time.com" },
 ]
 
-requires-python = ">=3.11"
+requires-python = ">=3.12,<3.14"
 readme = "README.md"
 license = { file = "LICENSE" }
 
@@ -50,8 +51,8 @@ dependencies = [
     "gunicorn",
 ]
 
-[tool.uv]
-dev-dependencies = [
+[dependency-groups]
+dev = [
     "cookiecutter>=2.6.0",
     "cookiecutter-data-science>=2.1.0",
     "mkdocs-material>=9.5.50",

@@ -3,16 +3,16 @@
 set -e
 
 timezone_setup() {
-    local TZ=${TZ}
+	local TZ=${TZ}
 
-    if [ -z "$TZ" ]; then
-        echo "==> Timezone not set"
-        return
-    fi
+	if [ -z "$TZ" ]; then
+		echo "==> Timezone not set"
+		return
+	fi
 
-    echo "==> Setting timezone to: $TZ"
-    sudo ln -snf /usr/share/zoneinfo/$TZ /etc/localtime
-    sudo dpkg-reconfigure -f noninteractive tzdata
+	echo "==> Setting timezone to: $TZ"
+	sudo ln -snf /usr/share/zoneinfo/"$TZ" /etc/localtime
+	sudo dpkg-reconfigure -f noninteractive tzdata
 }
 
 echo "==> Working directory: $(pwd)"
@@ -21,9 +21,9 @@ echo "==> Working directory: $(pwd)"
 #
 echo "==> Load environment variables from .env file"
 if [ -f ".env" ]; then
-    set -o allexport
-    source ./.env
-    set +o allexport
+	set -o allexport
+	source ./.env
+	set +o allexport
 fi
 
 # Timezone setup
@@ -43,5 +43,30 @@ git config --global user.email "${GIT_USER_EMAIL}"
 echo "==> Setting git user.email: '${GIT_USER_NAME}'"
 git config --global user.name "${GIT_USER_NAME}"
 
-echo "==> uv sync --frozen"
+echo "==> uv sync"
+if [ ! -f uv.lock ]; then
+	echo "No uv.lock found — running uv lock first..."
+	uv lock
+fi
 uv sync --frozen
+
+echo "==> Change directory /workspaces/"
+cd /workspace/src
+
+echo "==> Remove db.sqlite3"
+rm -f database/b.sqlite3 || true
+
+echo "==> Collect static files"
+# uv run python3 manage.py collectstatic --noinput
+
+echo "==> Make migrations and makemigrations"
+# uv run python3 manage.py makemigrations
+
+echo "==> Make migrations and migrate"
+uv run python3 manage.py migrate
+
+echo "==> Create superuser"
+# uv run python3 manage.py createsuperuser --username Admin --noinput || true
+
+echo "==> Run server"
+# uv run python3 manage.py runserver

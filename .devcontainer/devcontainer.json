@@ -1,7 +1,7 @@
 {
-    "name": "nexxus-ninja",
+    "name": "cross-fire.org nexxus-ninja",
     "dockerComposeFile": [
-        "docker-compose.yml"
+        "compose.yml"
     ],
     "service": "vscode",
     "workspaceFolder": "/workspace",
@@ -28,18 +28,23 @@
                 "ms-python.debugpy",
                 "ms-playwright.playwright",
                 "GitHub.copilot"
-            ]
+            ],
+            "settings": {
+                "python.defaultInterpreterPath": "/home/vscode/.venv/bin/python3"
+            }
         }
     },
     "containerEnv": {
+        "VIRTUAL_ENV": "/home/vscode/.venv",
         "DISPLAY": "dummy",
         "PYTHONUNBUFFERED": "True",
         "UV_LINK_MODE": "copy",
-        "UV_PROJECT_ENVIRONMENT": "/workspace/.venv"
+        "UV_PROJECT_ENVIRONMENT": "/home/vscode/.venv"
     },
-    "postCreateCommand": "./.devcontainer/postCreateCommand.sh && uv run pre-commit install",
-    "remoteUser": "vscode",
     "forwardPorts": [
         8000
-    ]
+    ],
+    "postCreateCommand": "./.devcontainer/postCreateCommand.sh",
+    "postStartCommand": "uv tool run pre-commit install",
+    "remoteUser": "vscode"
 }
