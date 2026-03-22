@@ -1,14 +1,19 @@
-ARG UV_VERSION=latest
-ARG DEBIAN_VERSION=bookworm
-
-ARG UBUNTU_VERSION=noble
-ARG HADOLINT=v2.12.0
-
-FROM ghcr.io/astral-sh/uv:$UV_VERSION AS uv
-FROM mcr.microsoft.com/vscode/devcontainers/base:$DEBIAN_VERSION
-# FROM ubuntu:$UBUNTU_VERSION
-
+# hadolint ignore=DL3007
+FROM ghcr.io/astral-sh/uv:latest AS uv
+FROM mcr.microsoft.com/devcontainers/python:dev-3.12-trixie
 LABEL maintainer="Bob Tanner <tanner@real-time.com>"
+
+ENV LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8 \
+    DEBIAN_FRONTEND=noninteractive \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONFAULTHANDLER=1 \
+    PIP_ROOT_USER_ACTION=ignore \
+    PYTHONUNBUFFERED=1
+
+ARG USERNAME=vscode
+ARG USER_UID=3000
+ARG USER_GID=3000
 
 # hadolint ignore=DL3008
 RUN apt-get update \
@@ -26,18 +31,15 @@ RUN apt-get update \
     unzip \
     vim-tiny \
     openssh-client \
+    shfmt \
+    shellcheck \
     && apt-get autoremove \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    && apt-get clean  \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+    && echo "$USERNAME ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/$USERNAME  \
+    && if ! getent group ${USERNAME}; then groupadd --gid ${USER_UID} $USERNAME; fi \
+    && if ! id -u ${USERNAME} > /dev/null 2>&1; then useradd --uid ${USER_UID} --gid ${USER_GID} -m ${USERNAME}; fi
 
-ARG USERNAME=vscode
-ARG USER_UID=3000
-ARG USER_GID=3000
-
-RUN echo "vscode ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/vscode  \
-    && if ! getent group vscode; then groupadd --gid 3000 vscode; fi \
-    && if ! id -u vscode > /dev/null 2>&1; then useradd --uid 3000 --gid 3000 -m vscode; fi
-
-COPY --from=uv --chown=vscode: /uv /uvx /bin/
+COPY --from=uv --chown=${USERNAME}: /uv /uvx /bin/
 
 EXPOSE 8000

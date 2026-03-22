@@ -1,5 +1,9 @@
 {
     // General Editor Settings
+    "chat.editor.fontSize": 16,
+    "editor.fontSize": 16,
+    "workbench.tree.indent": 12,
+    "terminal.integrated.fontSize": 16,
     "files.insertFinalNewline": true,
     "files.trimTrailingWhitespace": true,
     // Python Interpreter and Testing

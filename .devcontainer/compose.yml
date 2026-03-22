@@ -5,9 +5,6 @@ services:
     build:
       context: ..
       dockerfile: .devcontainer/Dockerfile
-      args:
-        UV_VERSION: latest
-        DEBIAN_VERSION: bookworm
     volumes:
       - ..:/workspace:cached
     environment:
