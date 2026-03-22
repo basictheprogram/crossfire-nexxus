@@ -18,11 +18,11 @@ services:
 
       # HTTP router configuration
       - traefik.http.routers.traefik-dashboard-http.entrypoints=http
-      - traefik.http.routers.traefik-dashboard-http.rule=Host(`traefik.${DOMAIN}`)
+      - traefik.http.routers.traefik-dashboard-http.rule=Host(`proxy.${DOMAIN}`)
 
       # HTTPS router configuration (without certresolver)
       - traefik.http.routers.traefik-dashboard-https.entrypoints=https
-      - traefik.http.routers.traefik-dashboard-https.rule=Host(`traefik.${DOMAIN}`)
+      - traefik.http.routers.traefik-dashboard-https.rule=Host(`proxy.${DOMAIN}`)
       - traefik.http.routers.traefik-dashboard-https.tls=true
       - traefik.http.routers.traefik-dashboard-https.tls.certresolver=le
       - traefik.http.routers.traefik-dashboard-https.service=api@internal
