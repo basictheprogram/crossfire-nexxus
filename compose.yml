@@ -55,7 +55,6 @@ services:
       - --certificatesresolvers.le.acme.email=${ACME_EMAIL}
       - --certificatesresolvers.le.acme.storage=/certificates/acme.json
       - --certificatesresolvers.le.acme.tlschallenge=true
-      - --certificatesresolvers.le.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory
 
       # Logging and API configuration
       - --accesslog.filepath=/var/log/traefik/access.log
@@ -103,9 +102,10 @@ services:
 
   django:
     container_name: nexxus-django
-    build:
-      context: ./
-      dockerfile: ./Dockerfile
+#    build:
+#      context: ./
+#      dockerfile: ./Dockerfile
+    image: basictheprogram/crossfire-nexxus:latest
     depends_on:
       - mysql
       - traefik
@@ -126,9 +126,6 @@ services:
       - EMAIL_PORT=${EMAIL_PORT}
       - EMAIL_HOST_USER=${EMAIL_HOST_USER}
       - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
-      # uWSGI
-      - UWSGI_USER=${UWSGI_USER}
-      - UWSGI_GROUP=${UWSGI_GROUP}
       # Misc
       - TZ=${TZ}
     # volumes:
