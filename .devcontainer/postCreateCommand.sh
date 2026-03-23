@@ -48,7 +48,7 @@ if [ ! -f uv.lock ]; then
 	echo "No uv.lock found — running uv lock first..."
 	uv lock
 fi
-uv sync --frozen
+uv sync --frozen --all-groups
 
 echo "==> Change directory /workspaces/"
 cd /workspace/src
@@ -63,7 +63,7 @@ echo "==> Make migrations and makemigrations"
 # uv run python3 manage.py makemigrations
 
 echo "==> Make migrations and migrate"
-uv run python3 manage.py migrate
+# uv run python3 manage.py migrate
 
 echo "==> Create superuser"
 # uv run python3 manage.py createsuperuser --username Admin --noinput || true

@@ -12,37 +12,71 @@
     "customizations": {
         "vscode": {
             "extensions": [
-                "charliermarsh.ruff",
-                "exiasr.hadolint",
-                "kevinrose.vsc-python-indent",
-                "mosapride.zenkaku",
-                "ms-azuretools.vscode-docker",
+                // Python
                 "ms-python.python",
                 "ms-python.vscode-pylance",
-                "njpwerner.autodocstring",
-                "redhat.vscode-yaml",
+                "charliermarsh.ruff",
+                // Django
+                "batisteo.vscode-django",
+                // General dev quality-of-life
+                "aaron-bond.better-comments",
                 "shardulm94.trailing-spaces",
-                "tamasfe.even-better-toml",
+                "eamodio.gitlens",
+                "redhat.vscode-yaml",
                 "yzhang.markdown-all-in-one",
-                "humao.rest-client",
-                "ms-python.debugpy",
-                "ms-playwright.playwright",
-                "GitHub.copilot"
+                // PHP
+                "bmewburn.vscode-intelephense-client",
+                "xdebug.php-debug",
+                "mrmlnc.vscode-apache",
+                // Frontend
+                "esbenp.prettier-vscode",
+                "dbaeumer.vscode-eslint",
+                "stylelint.vscode-stylelint",
+                "HTMLHint.vscode-htmlhint",
+                "pranaygp.vscode-css-peek",
+                "formulahendry.auto-close-tag",
+                "formulahendry.auto-rename-tag",
+                // Dev tools
+                "ms-azuretools.vscode-docker",
+                "GitHub.copilot",
+                "tomoki1207.pdf",
+                "ms-vscode.makefile-tools"
             ],
             "settings": {
-                "python.defaultInterpreterPath": "/home/vscode/.venv/bin/python3"
+                // Python
+                "python.defaultInterpreterPath": "/home/vscode/.venv/bin/python3",
+                "python.analysis.autoImportCompletions": true,
+                // Ruff
+                "ruff.enable": true,
+                "ruff.organizeImports": true,
+                // Editor behavior
+                "editor.formatOnSave": true,
+                "[python]": {
+                    "editor.defaultFormatter": "charliermarsh.ruff"
+                },
+                "[html]": {
+                    "editor.formatOnSave": false
+                },
+                // Terminal / container
+                "terminal.integrated.wordWrap": "off",
+                "remote.containers.logLevel": "debug",
+                // PHP
+                "php.validate.enable": true,
+                "intelephense.diagnostics.enable": true
             }
         }
     },
     "containerEnv": {
         "VIRTUAL_ENV": "/home/vscode/.venv",
-        "DISPLAY": "dummy",
         "PYTHONUNBUFFERED": "True",
         "UV_LINK_MODE": "copy",
-        "UV_PROJECT_ENVIRONMENT": "/home/vscode/.venv"
+        "UV_PROJECT_ENVIRONMENT": "/home/vscode/.venv",
+        "DISPLAY": "dummy"
     },
     "forwardPorts": [
-        8000
+        80,
+        443,
+        3306
     ],
     "postCreateCommand": "./.devcontainer/postCreateCommand.sh",
     "postStartCommand": "uv tool run pre-commit install",

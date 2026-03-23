@@ -1,7 +1,7 @@
 # hadolint ignore=DL3007
 FROM ghcr.io/astral-sh/uv:latest AS uv
-FROM mcr.microsoft.com/devcontainers/python:dev-3.12-trixie
-LABEL maintainer="Bob Tanner <tanner@real-time.com>"
+FROM mcr.microsoft.com/devcontainers/python:dev-3.14-trixie
+LABEL maintainer="tanner@real-time.com"
 
 ENV LANG=C.UTF-8 \
     LC_ALL=C.UTF-8 \
@@ -16,8 +16,10 @@ ARG USER_UID=3000
 ARG USER_GID=3000
 
 # hadolint ignore=DL3008
-RUN apt-get update \
+RUN rm -f /etc/apt/sources.list.d/yarn.list \
+    && apt-get update \
     && apt-get install -y --no-install-recommends \
+    tzdata \
     libonig-dev \
     python3-dev \
     default-libmysqlclient-dev \
