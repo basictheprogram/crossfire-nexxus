@@ -55,10 +55,6 @@ services:
     image: basictheprogram/crossfire-nexxus:latest
     restart: always
 
-    depends_on:
-      mysql:
-        condition: service_healthy
-
     environment:
       # Django v5.2
       DEBUG: true
@@ -81,6 +77,10 @@ services:
 
     ports:
       - "8000:8000"
+
+    depends_on:
+      mysql:
+        condition: service_healthy
 
     volumes:
       - ./src/mock_CDN/static:/vol/static

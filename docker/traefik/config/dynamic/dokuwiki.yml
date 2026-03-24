@@ -1,0 +1,68 @@
+---
+http:
+  middlewares:
+    redirect-https:
+      redirectScheme:
+        scheme: https
+        permanent: true
+
+    security-headers:
+      headers:
+        stsSeconds: 63072000
+        stsIncludeSubdomains: true
+        frameDeny: true
+        contentTypeNosniff: true
+        browserXssFilter: true
+        referrerPolicy: "same-origin"
+
+  routers:
+    dokuwiki-http-redir:
+      priority: 10
+      rule: "Host(`wiki.cross-fire.org`)"
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-https
+      service: noop
+      tls: false
+
+    dokuwiki-acme:
+      priority: 100
+      rule: >
+        Host(`wiki.cross-fire.org`)
+         && PathPrefix(`/.well-known/acme-challenge/`)
+      entryPoints:
+        - web
+      service: noop
+      tls: false
+
+    dokuwiki-https:
+      rule: "Host(`wiki.cross-fire.org`)"
+      entryPoints:
+        - websecure
+      service: dokuwiki-service
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - security-headers
+
+  services:
+    dokuwiki-service:
+      loadBalancer:
+        passHostHeader: true
+        serversTransport: dokuwiki-transport
+        servers:
+          - url: "http://dokuwiki:8080"
+
+    noop:
+      loadBalancer:
+        servers:
+          - url: "http://127.0.0.1"
+
+  serversTransports:
+    dokuwiki-transport:
+      forwardingTimeouts:
+        dialTimeout: 10s
+        responseHeaderTimeout: 300s
+        idleConnTimeout: 300s
+      maxIdleConnsPerHost: 200
