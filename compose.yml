@@ -58,11 +58,6 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-<<<<<<< HEAD
-=======
-      traefik:
-        condition: service_healthy
->>>>>>> 7aa3b5681e40f95a81cf97462c9a6a596711d5ef
 
     environment:
       # Django v5.2
@@ -107,9 +102,10 @@ networks:
   nexxus:
     name: nexxus
     driver: bridge
+    external: true
 
 volumes:
-  nexxus-mysql-data:
+  mysql_data:
     driver: local
   traefik-public-certificates:
     driver: local
