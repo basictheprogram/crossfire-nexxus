@@ -12,23 +12,18 @@
     "customizations": {
         "vscode": {
             "extensions": [
-                // Python
                 "ms-python.python",
                 "ms-python.vscode-pylance",
                 "charliermarsh.ruff",
-                // Django
                 "batisteo.vscode-django",
-                // General dev quality-of-life
                 "aaron-bond.better-comments",
                 "shardulm94.trailing-spaces",
                 "eamodio.gitlens",
                 "redhat.vscode-yaml",
                 "yzhang.markdown-all-in-one",
-                // PHP
                 "bmewburn.vscode-intelephense-client",
                 "xdebug.php-debug",
                 "mrmlnc.vscode-apache",
-                // Frontend
                 "esbenp.prettier-vscode",
                 "dbaeumer.vscode-eslint",
                 "stylelint.vscode-stylelint",
@@ -36,11 +31,11 @@
                 "pranaygp.vscode-css-peek",
                 "formulahendry.auto-close-tag",
                 "formulahendry.auto-rename-tag",
-                // Dev tools
                 "ms-azuretools.vscode-docker",
                 "GitHub.copilot",
                 "tomoki1207.pdf",
-                "ms-vscode.makefile-tools"
+                "ms-vscode.makefile-tools",
+                "humao.rest-client"
             ],
             "settings": {
                 // Python

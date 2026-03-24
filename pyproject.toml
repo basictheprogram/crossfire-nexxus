@@ -39,7 +39,8 @@ classifiers = [
 ]
 
 dependencies = [
-    "Django>=5.1,<6.0",
+    "Django>=5.2,<6.0",
+    "django-easy-health-check",
     "django-ninja",
     "django-ninja-extra",
     "django-extensions",
@@ -74,7 +75,6 @@ dev = [
     "pytest-playwright",
     "requests",
     "ruff",
-    "sphinx",
 ]
 
 [tool.hatch.build.targets.wheel]

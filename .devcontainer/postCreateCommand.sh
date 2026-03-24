@@ -57,13 +57,13 @@ echo "==> Remove db.sqlite3"
 rm -f database/b.sqlite3 || true
 
 echo "==> Collect static files"
-# uv run python3 manage.py collectstatic --noinput
+uv run python3 manage.py collectstatic --noinput
 
 echo "==> Make migrations and makemigrations"
-# uv run python3 manage.py makemigrations
+uv run python3 manage.py makemigrations
 
 echo "==> Make migrations and migrate"
-# uv run python3 manage.py migrate
+uv run python3 manage.py migrate
 
 echo "==> Create superuser"
 # uv run python3 manage.py createsuperuser --username Admin --noinput || true

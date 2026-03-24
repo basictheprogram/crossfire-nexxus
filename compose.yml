@@ -1,173 +1,101 @@
 ---
+name: cross-fire_nexxus
 services:
-  traefik:
-    image: traefik:3
-    container_name: nexxus-traefik
-    environment:
-      - TZ=${TZ}
-    ports:
-      - "80:80"
-      - "443:443"
-      - "8080:8080"
-    restart: always
-    labels:
-      # Traefik configuration
-      - traefik.enable=true
-      - traefik.docker.network=nexxus
-      - traefik.http.services.traefik-dashboard.loadbalancer.server.port=8080
-
-      # HTTP router configuration
-      - traefik.http.routers.traefik-dashboard-http.entrypoints=http
-      - traefik.http.routers.traefik-dashboard-http.rule=Host(`traefik.${DOMAIN}`)
-
-      # HTTPS router configuration (without certresolver)
-      - traefik.http.routers.traefik-dashboard-https.entrypoints=https
-      - traefik.http.routers.traefik-dashboard-https.rule=Host(`traefik.${DOMAIN}`)
-      - traefik.http.routers.traefik-dashboard-https.tls=true
-      - traefik.http.routers.traefik-dashboard-https.tls.certresolver=le
-      - traefik.http.routers.traefik-dashboard-https.service=api@internal
-
-      # HTTPS redirect middleware
-      - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
-      - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
-      - traefik.http.routers.traefik-dashboard-http.middlewares=https-redirect
-
-      # HTTP Basic Auth middleware
-      - traefik.http.middlewares.admin-auth.basicauth.users=${USERNAME}:${HASHED_PASSWORD}
-      - traefik.http.routers.traefik-dashboard-https.middlewares=admin-auth
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /etc/localtime:/etc/localtime:ro
-      - traefik-public-certificates:/certificates
-      - /var/log/traefik/:/var/log/traefik/
-    command:
-      # Docker provider configuration
-      - --providers.docker
-      - --providers.docker.exposedbydefault=false
-
-      # Entrypoints configuration
-      - --entrypoints.http.address=:80
-      - --entrypoints.https.address=:443
-      - --entrypoints.http.forwardedHeaders.trustedIPs=0.0.0.0/0
-      - --entrypoints.http.proxyProtocol.trustedIPs=0.0.0.0/0
-
-      # Let's Encrypt configuration
-      - --certificatesresolvers.le.acme.email=${ACME_EMAIL}
-      - --certificatesresolvers.le.acme.storage=/certificates/acme.json
-      - --certificatesresolvers.le.acme.tlschallenge=true
-
-      # Logging and API configuration
-      - --accesslog.filepath=/var/log/traefik/access.log
-      - --accesslog.format=json
-      - --accesslog.fields.defaultmode=keep
-      - --accesslog.fields.headers.defaultmode=keep
-      - --accesslog.fields.names.ClientHost=keep
-      - --accesslog.fields.names.RequestAddr=keep
-      - --accesslog.fields.names.RequestMethod=keep
-      - --accesslog.fields.names.RequestPath=keep
-      - --accesslog.fields.names.RequestProtocol=keep
-      - --accesslog.fields.names.ResponseStatus=keep
-      - --accesslog.fields.names.Duration=keep
-      - --accesslog.fields.names.Referer=keep
-      - --accesslog.fields.names.RequestUserAgent=keep
-      - --accesslog.fields.names.StartUTC=drop
-      - --accesslog.fields.names.StartLocal=keep
-      - --log.level=INFO
-      - --api
-    networks:
-      - nexxus
-
   mysql:
     container_name: nexxus-mysql
     image: mysql:lts
-    restart: always
-    volumes:
-      - nexxus-mysql-data:/var/lib/mysql
-      - ./.devcontainer/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
+    restart: unless-stopped
+
+    cap_add:
+      - SYS_NICE
+
+    command: >
+      --general-log=0
+      --slow-query-log=1
+      --log-queries-not-using-indexes=1
+      --long-query-time=10
+      --max_allowed_packet=256M
+      --net_read_timeout=600
+      --net_write_timeout=600
+      --wait_timeout=28800
+      --interactive_timeout=28800
+
     environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_HOST=${MYSQL_HOST}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_HOST_PORT=${MYSQL_HOST_PORT:-3306}
-      - TZ=${TZ}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      TZ: ${TZ}
+      MYSQL_INNODB_BUFFER_POOL_SIZE: 512M
+      MYSQL_INNODB_LOG_FILE_SIZE: 128M
+
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - "./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro"
+      - /dev/log:/dev/log
+
+    ports:
+      - "3306:3306"
+
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u $$MYSQL_USER --password=$MYSQL_PASSWORD"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 30s
       timeout: 10s
       retries: 5
+      start_period: 30s
+
+    labels:
+      - "traefik.enable=false"
+
     networks:
       - nexxus
 
   django:
     container_name: nexxus-django
-#    build:
-#      context: ./
-#      dockerfile: ./Dockerfile
     image: basictheprogram/crossfire-nexxus:latest
-    depends_on:
-      - mysql
-      - traefik
-    environment:
-      # Django v5.2
-      - DEBUG=True
-      - SECRET_KEY=${DJANGO_SECRET_KEY}
-      - ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
-      # MySQL v8.4
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_HOST=${MYSQL_HOST}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_HOST_PORT=${MYSQL_HOST_PORT:-3306}
-      # Email
-      - EMAIL_HOST=${EMAIL_HOST}
-      - EMAIL_PORT=${EMAIL_PORT}
-      - EMAIL_HOST_USER=${EMAIL_HOST_USER}
-      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
-      # Misc
-      - TZ=${TZ}
-    # volumes:
-    #   - /home/projects/docker/judging-portal/static:/vol/static
-    #   - /home/tanner/projects/judging-portal/src/static:/vol/staticfiles
     restart: always
 
+    depends_on:
+      mysql:
+        condition: service_healthy
+      traefik:
+        condition: service_healthy
+
+    environment:
+      # Django v5.2
+      DEBUG: true
+      SECRET_KEY: ${DJANGO_SECRET_KEY}
+      ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS}
+      # MySQL v8.4
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_HOST_PORT: ${MYSQL_HOST_PORT:-3306}
+      # Email
+      EMAIL_HOST: ${EMAIL_HOST}
+      EMAIL_PORT: ${EMAIL_PORT}
+      EMAIL_HOST_USER: ${EMAIL_HOST_USER}
+      EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
+      # Misc
+      TZ: ${TZ}
+
+    ports:
+      - "8000:8000"
+
+    volumes:
+      - ./src/mock_CDN/static:/vol/static
+
     labels:
-      - traefik.enable=true
+      - "traefik.enable=false"
 
-      # Use HostRegexp to match optional "castle" subdomain (matches nexxus.cross-fire.org and nexxus.castle.cross-fire.org)
-      - traefik.http.routers.nexxus-http.rule=HostRegexp(`nexxus{subdomain:(?:\.castle)?}.${DOMAIN}`) && (Path(`/meta_client.php`) || Path(`/meta_html.php`) || Path(`/meta_update.php`))
-      - traefik.http.routers.nexxus-http.entrypoints=http
-      - traefik.http.routers.nexxus-http.service=nexxus-service
-
-      - traefik.http.routers.nexxus-https.rule=HostRegexp(`nexxus{subdomain:(?:\.castle)?}.${DOMAIN}`) && (Path(`/meta_client.php`) || Path(`/meta_html.php`) || Path(`/meta_update.php`))
-      - traefik.http.routers.nexxus-https.entrypoints=https
-      - traefik.http.routers.nexxus-https.tls=true
-      - traefik.http.routers.nexxus-https.tls.certresolver=le
-      - traefik.http.routers.nexxus-https.service=nexxus-service
-
-      # Allow HTTPS /v3 paths
-      - traefik.http.routers.nexxus-v3-https.rule=HostRegexp(`nexxus{subdomain:(?:\.castle)?}.${DOMAIN}`) && PathPrefix(`/v3`)
-      - traefik.http.routers.nexxus-v3-https.entrypoints=https
-      - traefik.http.routers.nexxus-v3-https.tls=true
-      - traefik.http.routers.nexxus-v3-https.tls.certresolver=le
-      - traefik.http.routers.nexxus-v3-https.service=nexxus-service
-
-      # Static / all other HTTPS traffic
-      - traefik.http.routers.nexxus-static.rule=HostRegexp(`nexxus{subdomain:(?:\.castle)?}.${DOMAIN}`)
-      - traefik.http.routers.nexxus-static.entrypoints=https
-      - traefik.http.routers.nexxus-static.tls=true
-      - traefik.http.routers.nexxus-static.tls.certresolver=le
-      - traefik.http.routers.nexxus-static.service=nexxus-service
-
-      # Redirect HTTP → HTTPS
-      - traefik.http.routers.nexxus-http-redir.rule=HostRegexp(`nexxus{subdomain:(?:\.castle)?}.${DOMAIN}`)
-      - traefik.http.routers.nexxus-http-redir.entrypoints=http
-      - traefik.http.routers.nexxus-http-redir.middlewares=https-redirect@docker
-
-      # Define backend service port
-      - traefik.http.services.nexxus-service.loadbalancer.server.port=8000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/healthcheck/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
 
     networks:
       - nexxus

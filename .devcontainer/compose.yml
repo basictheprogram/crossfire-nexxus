@@ -23,7 +23,7 @@ services:
 
   mysql:
     container_name: nexxus-mysql
-    image: mysql:8.4.8
+    image: mysql:lts
     restart: unless-stopped
 
     cap_add:
@@ -50,7 +50,7 @@ services:
       MYSQL_INNODB_LOG_FILE_SIZE: 128M
 
     volumes:
-      - mysql_data:/var/lib/mysql"
+      - mysql_data:/var/lib/mysql
       - "./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro"
       - /dev/log:/dev/log
 

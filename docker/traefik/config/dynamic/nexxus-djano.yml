@@ -1,0 +1,87 @@
+---
+http:
+  middlewares:
+    nexxus-rfc1918-only:
+      ipWhiteList:
+        sourceRange:
+          - "127.0.0.1/32"
+          - "10.0.0.0/8"
+          - "172.16.0.0/12"
+          - "192.168.0.0/16"
+
+    redirect-https:
+      redirectScheme:
+        scheme: https
+        permanent: true
+
+    security-headers:
+      headers:
+        stsSeconds: 63072000
+        stsIncludeSubdomains: true
+        frameDeny: true
+        contentTypeNosniff: true
+        browserXssFilter: true
+        referrerPolicy: "same-origin"
+
+  routers:
+    nexxus-castle-http:
+      priority: 200
+      rule: "Host(`nexxus.castle.cross-fire.org`)"
+      entryPoints:
+        - web
+      middlewares:
+        - nexxus-rfc1918-only
+      service: nexxus-api
+      tls: false
+
+    redirect-to-https:
+      priority: 1
+      rule: "HostRegexp(`{any:.+}`)"
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-https
+      service: noop
+      tls: false
+
+    nexxus-acme:
+      priority: 100
+      rule: >
+        Host(`nexxus.cross-fire.org`)
+         && PathPrefix(`/.well-known/acme-challenge/`)
+      entryPoints:
+        - web
+      service: noop
+      tls: false
+
+    nexxus-https:
+      rule: "Host(`nexxus.cross-fire.org`)"
+      entryPoints:
+        - websecure
+      service: nexxus-api
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - nexxus-rfc1918-only
+        - security-headers
+
+  services:
+    nexxus-api:
+      loadBalancer:
+        passHostHeader: true
+        serversTransport: nexxus-transport
+        servers:
+          - url: "http://django:8000"
+
+    noop:
+      loadBalancer:
+        servers:
+          - url: "http://127.0.0.1"
+
+  serversTransports:
+    nexxus-transport:
+      forwardingTimeouts:
+        dialTimeout: 10s
+        responseHeaderTimeout: 300s
+        idleConnTimeout: 300s
+      maxIdleConnsPerHost: 200
