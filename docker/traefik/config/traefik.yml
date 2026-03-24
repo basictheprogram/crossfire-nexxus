@@ -1,0 +1,65 @@
+---
+global:
+  checkNewVersion: true
+  sendAnonymousUsage: false
+
+log:
+  level: DEBUG
+  format: json
+
+accessLog:
+  filePath: /dev/stdout
+  format: json
+  bufferingSize: 100
+  fields:
+    defaultMode: keep
+    names:
+      ClientUsername: keep
+    headers:
+      defaultMode: drop
+      names:
+        User-Agent: keep
+        X-Forwarded-For: keep
+        X-Real-Ip: keep
+        Authorization: drop
+        Cookie: drop
+
+serversTransport:
+  insecureSkipVerify: false
+  maxIdleConnsPerHost: 200
+
+entryPoints:
+  web:
+    address: ":80"
+    forwardedHeaders:
+      trustedIPs:
+        - "127.0.0.1/32"
+        - "10.0.0.0/8"
+        - "172.16.0.0/12"
+        - "192.168.0.0/16"
+
+  websecure:
+    address: ":443"
+    forwardedHeaders:
+      trustedIPs:
+        - "127.0.0.1/32"
+        - "10.0.0.0/8"
+        - "172.16.0.0/12"
+        - "192.168.0.0/16"
+
+providers:
+  docker:
+    exposedByDefault: false
+    network: dmz
+
+  file:
+    directory: /etc/traefik/dynamic
+    watch: true
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: techs@real-time.com
+      storage: /var/traefik/certs/acme.json
+      httpChallenge:
+        entryPoint: web

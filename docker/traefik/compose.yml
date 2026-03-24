@@ -1,0 +1,50 @@
+---
+services:
+  traefik:
+    image: traefik:3
+    container_name: traefik
+    restart: unless-stopped
+
+    environment:
+      TZ: ${TZ}
+
+    ports:
+      - "80:80"
+      - "443:443"
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ./config/:/etc/traefik/:ro
+      - ./certs/:/var/traefik/certs/:rw
+      - /dev/log:/dev/log
+
+    labels:
+      com.comap.dmz.env: "devel"
+
+    logging:
+      driver: journald
+      options:
+        tag: "traefik.dmz.comap.com"
+        labels: "com.comap.dmz.env"
+
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+        reservations:
+          memory: 512m
+
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+
+    networks:
+      - dmz
+
+networks:
+  dmz:
+    name: dmz
+    driver: bridge
+    external: true
