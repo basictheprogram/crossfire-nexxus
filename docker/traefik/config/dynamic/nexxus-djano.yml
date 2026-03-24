@@ -62,7 +62,6 @@ http:
       tls:
         certResolver: letsencrypt
       middlewares:
-        - nexxus-rfc1918-only
         - security-headers
 
   services:
