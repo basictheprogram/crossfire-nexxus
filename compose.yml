@@ -102,9 +102,10 @@ networks:
   nexxus:
     name: nexxus
     driver: bridge
+    external: true
 
 volumes:
-  nexxus-mysql-data:
+  mysql_data:
     driver: local
   traefik-public-certificates:
     driver: local

@@ -41,9 +41,10 @@ services:
         hard: 65536
 
     networks:
-      - dmz
+      - nexxus
 
 networks:
-  dmz:
-    name: dmz
+  nexxus:
+    name: nexxus
     driver: bridge
+    external: true
