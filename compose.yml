@@ -58,11 +58,6 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-<<<<<<< HEAD
-      traefik:
-        condition: service_healthy
-=======
->>>>>>> 05a5d6aa24217082501c97d898b4a8890dca4fde
 
     environment:
       # Django v5.2
