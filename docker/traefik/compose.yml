@@ -25,8 +25,8 @@ services:
     logging:
       driver: journald
       options:
-        tag: "traefik.dmz.comap.com"
-        labels: "com.comap.dmz.env"
+        tag: "traefik.cross-fire.org"
+        labels: "org.cross-fire..env"
 
     deploy:
       resources:
@@ -47,4 +47,3 @@ networks:
   dmz:
     name: dmz
     driver: bridge
-    external: true
