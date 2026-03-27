@@ -1,5 +1,6 @@
 {
     // General Editor Settings
+    "chat.fontSize": 16,
     "chat.editor.fontSize": 16,
     "editor.fontSize": 16,
     "workbench.tree.indent": 12,

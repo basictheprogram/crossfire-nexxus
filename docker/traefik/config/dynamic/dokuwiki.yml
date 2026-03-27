@@ -12,10 +12,23 @@ http:
         stsIncludeSubdomains: true
         frameDeny: true
         contentTypeNosniff: true
-        browserXssFilter: true
         referrerPolicy: "same-origin"
 
+    compress-response:
+      compress: {}
+
   routers:
+    dokuwiki-block-badbots:
+      priority: 1000
+      rule: >
+        Host(`wiki.cross-fire.org`)
+        && HeadersRegexp(`User-Agent`, `(?i)(BLEXBot|ClaudeBot|meta-externalagent|CMS-Checker)`)
+      entryPoints:
+        - websecure
+      service: noop@internal
+      tls:
+        certResolver: letsencrypt
+
     dokuwiki-http-redir:
       priority: 10
       rule: "Host(`wiki.cross-fire.org`)"
@@ -23,17 +36,7 @@ http:
         - web
       middlewares:
         - redirect-https
-      service: noop
-      tls: false
-
-    dokuwiki-acme:
-      priority: 100
-      rule: >
-        Host(`wiki.cross-fire.org`)
-         && PathPrefix(`/.well-known/acme-challenge/`)
-      entryPoints:
-        - web
-      service: noop
+      service: noop@internal
       tls: false
 
     dokuwiki-https:
@@ -45,6 +48,7 @@ http:
         certResolver: letsencrypt
       middlewares:
         - security-headers
+        - compress-response
 
   services:
     dokuwiki-service:
@@ -53,11 +57,6 @@ http:
         serversTransport: dokuwiki-transport
         servers:
           - url: "http://dokuwiki:8080"
-
-    noop:
-      loadBalancer:
-        servers:
-          - url: "http://127.0.0.1"
 
   serversTransports:
     dokuwiki-transport:
