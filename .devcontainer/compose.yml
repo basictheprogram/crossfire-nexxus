@@ -74,6 +74,7 @@ networks:
   nexxus:
     name: nexxus
     driver: bridge
+    external: true
 
 volumes:
   mysql_data:
